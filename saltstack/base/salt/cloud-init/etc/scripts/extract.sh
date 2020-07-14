@@ -9,7 +9,7 @@ tar -xvzf /opt/salt_3000.2-archive.tar.gz -C /opt >> /var/log/extract.log
 date >> /var/log/extract.log
 
 date >> /var/log/extract.log
-echo "Extracting td-agent..." >> /var/log/extract.log
+echo "OP: Extracting td-agent..." >> /var/log/extract.log
 tar -xvzf /opt/td-agent-archive.tar.gz -C /opt >> /var/log/extract.log
 date >> /var/log/extract.log
 
@@ -38,10 +38,10 @@ echo OP: Done extracting all files.
 
 
 
-# Notes for review
+# Notes on why this is done.
 # - The way EC2 launches instances, a lot of files end up being downloaded from S3? on-demand.
 # 
-# What shows up in scale-up timing
+# What shows up in scale-up timing - On the first start of these services
 # - salt-minion takes 20 seconds to launch after invoking the command
 # - ipa-install takes 20 seconds
 # - td-agent takes 10 seconds
@@ -56,5 +56,3 @@ echo OP: Done extracting all files.
 # salt startup -> -15 seconds
 # td-agent startup -> -5 seconds (td-agent - we likely need to purge unnecessary rubbish (man pages, unneeded plugins) in the image baking process)
 # maybe some improvements in cm-agent startup
-
-

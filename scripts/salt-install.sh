@@ -70,7 +70,6 @@ function install_with_yum() {
   echo "exclude=salt" >> /etc/yum.conf
   install_salt_with_pip
   create_temp_minion_config
-  create_archives
 }
 
 function enable_epel_repository() {
@@ -125,8 +124,6 @@ function install_with_zypper() {
   zypper install -y python-simplejson python-pip zypp-plugin-python gcc gcc-c++ make python-devel
   zypper addlock salt zeromq zeromq-devel
   install_salt_with_pip
-  create_temp_minion_config
-
 }
 
 function create_temp_minion_config() {
@@ -134,28 +131,6 @@ function create_temp_minion_config() {
   echo "backend_requests: True" >> /tmp/minion
 }
 
-function create_archives() {
-  tar -C /usr/lib64 -cvzf /usr/lib64/python3.6-archive.tar.gz python3.6
-  tar -C /usr/lib -cvzf /usr/lib/python3.6-archive.tar.gz python3.6
-  tar -C /usr/lib64 -cvzf /usr/lib64/python2.7-archive.tar.gz python2.7
-  tar -C /usr/lib -cvzf /usr/lib/python2.7-archive.tar.gz python2.7
-
-  # Notes for review
-  # Salt ends up taking a long time to load modules. vspere is an especially slow one taking 3 seconds.
-  # Salt does not seem to allow skipping module load (disable_modules does not do this)
-  # So, deleting some modules which are not used, and tend to cause Exceptions / delays
-
-  find /opt/salt_3000.2 | grep modules | grep lxd | xargs rm
-  find /opt/salt_3000.2 | grep modules | grep vsphere | xargs rm
-  find /opt/salt_3000.2 | grep modules | grep boto3_elasticsearch | xargs rm
-  find /opt/salt_3000.2 | grep modules | grep win_ | xargs rm
-
-  tar -C /opt -cvzf /opt/salt_${SALT_VERSION}-archive.tar.gz salt_${SALT_VERSION}
-  #rm -rf ${SALT_PATH}
-
-  #TODO: td-agent isn't installed yet.
-  #tar -C /opt -cvzf /opt/td-agent-archive.tar.gz td-agent
-}
 
 : ${SALT_INSTALL_OS:=$1}
 
