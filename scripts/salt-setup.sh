@@ -55,7 +55,7 @@ function add_single_role_for_cluster_salt {
 function add_prewarmed_roles {
   if [ "${INCLUDE_FLUENT}" == "Yes" ]; then
     # Note: This will need to be changed if making changes to versions etc in the prewarmed image.
-    local fluent_prewarmed="fluent_prewarmed_v1"
+    local fluent_prewarmed=${FLUENT_PREWARM_TAG}
     echo "Adding ${fluent_prewarmed} to the list of roles for the final image"
     add_single_role_for_cluster_salt ${fluent_prewarmed}
   fi
